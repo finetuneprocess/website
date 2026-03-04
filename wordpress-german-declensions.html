@@ -1,0 +1,177 @@
+<!--
+  German Adjective Declensions - Interactive Decision Tree
+  Paste this entire block into a WordPress "Custom HTML" block.
+-->
+<div id="german-declension-app" style="max-width:740px;margin:0 auto;font-family:system-ui,sans-serif;"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script>
+(function(){
+var e=React.createElement,C={bg:"#0f172a",card:"#1e293b",a1:"#38bdf8",a2:"#a78bfa",a3:"#34d399",a4:"#fb923c",a5:"#f472b6",yl:"#fbbf24",rd:"#f87171",tx:"#f1f5f9",tm:"#94a3b8",bd:"#475569",gn:"#4ade80"};
+var gc={m:C.a1,f:C.a5,n:C.a4,pl:C.a3};
+var END={definite:{Nominativ:{m:"-e",f:"-e",n:"-e",pl:"-en"},Akkusativ:{m:"-en",f:"-e",n:"-e",pl:"-en"},Dativ:{m:"-en",f:"-en",n:"-en",pl:"-en"},Genitiv:{m:"-en",f:"-en",n:"-en",pl:"-en"}},indefinite:{Nominativ:{m:"-er",f:"-e",n:"-es",pl:"-en"},Akkusativ:{m:"-en",f:"-e",n:"-es",pl:"-en"},Dativ:{m:"-en",f:"-en",n:"-en",pl:"-en"},Genitiv:{m:"-en",f:"-en",n:"-en",pl:"-en"}},none:{Nominativ:{m:"-er",f:"-e",n:"-es",pl:"-e"},Akkusativ:{m:"-en",f:"-e",n:"-es",pl:"-e"},Dativ:{m:"-em",f:"-er",n:"-em",pl:"-en"},Genitiv:{m:"-en",f:"-er",n:"-en",pl:"-er"}}};
+var AM={der:{type:"definite",gender:"m",cas:"Nominativ"},den:{type:"definite",gender:"m",cas:"Akkusativ"},dem:{type:"definite",gender:"m",cas:"Dativ"},des:{type:"definite",gender:"m",cas:"Genitiv"},die:{type:"definite",gender:"f",cas:"Nominativ"},das:{type:"definite",gender:"n",cas:"Nominativ"},ein:{type:"indefinite",gender:"m",cas:"Nominativ"},eine:{type:"indefinite",gender:"f",cas:"Nominativ"},einen:{type:"indefinite",gender:"m",cas:"Akkusativ"},einem:{type:"indefinite",gender:"m",cas:"Dativ"},einer:{type:"indefinite",gender:"f",cas:"Dativ"},eines:{type:"indefinite",gender:"m",cas:"Genitiv"},kein:{type:"indefinite",gender:"m",cas:"Nominativ"},keine:{type:"indefinite",gender:"f",cas:"Nominativ"},keinen:{type:"indefinite",gender:"m",cas:"Akkusativ"},keinem:{type:"indefinite",gender:"m",cas:"Dativ"},keiner:{type:"indefinite",gender:"f",cas:"Dativ"},keines:{type:"indefinite",gender:"m",cas:"Genitiv"},mein:{type:"indefinite",gender:"m",cas:"Nominativ"},meine:{type:"indefinite",gender:"f",cas:"Nominativ"},meinen:{type:"indefinite",gender:"m",cas:"Akkusativ"},meinem:{type:"indefinite",gender:"m",cas:"Dativ"},meiner:{type:"indefinite",gender:"f",cas:"Dativ"},meines:{type:"indefinite",gender:"m",cas:"Genitiv"},dein:{type:"indefinite",gender:"m",cas:"Nominativ"},deine:{type:"indefinite",gender:"f",cas:"Nominativ"},sein:{type:"indefinite",gender:"m",cas:"Nominativ"},seine:{type:"indefinite",gender:"f",cas:"Nominativ"},ihr:{type:"indefinite",gender:"m",cas:"Nominativ"},ihre:{type:"indefinite",gender:"f",cas:"Nominativ"},unser:{type:"indefinite",gender:"m",cas:"Nominativ"},unsere:{type:"indefinite",gender:"f",cas:"Nominativ"},dieser:{type:"definite",gender:"m",cas:"Nominativ"},diese:{type:"definite",gender:"f",cas:"Nominativ"},dieses:{type:"definite",gender:"n",cas:"Nominativ"},jeder:{type:"definite",gender:"m",cas:"Nominativ"},jede:{type:"definite",gender:"f",cas:"Nominativ"},jedes:{type:"definite",gender:"n",cas:"Nominativ"},welcher:{type:"definite",gender:"m",cas:"Nominativ"},welche:{type:"definite",gender:"f",cas:"Nominativ"},welches:{type:"definite",gender:"n",cas:"Nominativ"}};
+var NG={mann:"m",junge:"m",hund:"m",tisch:"m",stuhl:"m",baum:"m",apfel:"m",wagen:"m",tag:"m",morgen:"m",abend:"m",monat:"m",sommer:"m",winter:"m",regen:"m",schnee:"m",wind:"m",berg:"m",fluss:"m",wald:"m",garten:"m",park:"m",markt:"m",laden:"m",wein:"m",kuchen:"m",fisch:"m",vogel:"m",schuh:"m",hut:"m",mantel:"m",rock:"m",koffer:"m",computer:"m",film:"m",brief:"m",freund:"m",bruder:"m",vater:"m",sohn:"m",onkel:"m",arzt:"m",lehrer:"m",student:"m",chef:"m",bus:"m",zug:"m",kaffee:"m",tee:"m",salat:"m",frau:"f",mutter:"f",tochter:"f",schwester:"f",tante:"f",freundin:"f",katze:"f",blume:"f",lampe:"f",tasche:"f",uhr:"f",stadt:"f",schule:"f",kirche:"f",milch:"f",butter:"f",suppe:"f",zeitung:"f",musik:"f",kunst:"f",zeit:"f",nacht:"f",woche:"f",stunde:"f",arbeit:"f",reise:"f",sprache:"f",farbe:"f",wohnung:"f",jacke:"f",hose:"f",brille:"f",bank:"f",flasche:"f",kind:"n",buch:"n",haus:"n",auto:"n",bier:"n",brot:"n",wasser:"n",glas:"n",fenster:"n",zimmer:"n",bett:"n",bild:"n",lied:"n",spiel:"n",tier:"n",pferd:"n",ei:"n",land:"n",meer:"n",essen:"n",kleid:"n",hemd:"n",hotel:"n",restaurant:"n",telefon:"n",radio:"n",problem:"n",geschenk:"n",kino:"n",museum:"n",sofa:"n",leute:"pl",eltern:"pl",geschwister:"pl",ferien:"pl"};
+
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
+function applyEnd(adj,ending){var stem=adj.toLowerCase().trim();var sfs=["en","em","er","es","e"];for(var i=0;i<sfs.length;i++){if(stem.endsWith(sfs[i])&&stem.length>sfs[i].length+2){stem=stem.slice(0,-sfs[i].length);break;}}return stem+ending.replace("-","");}
+
+function parseInput(input){
+  var words=input.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  if(words.length<2)return{error:'Enter at least 2 words, e.g. "ein kalt Bier"'};
+  var aw=null,ai=null,adj,noun;
+  if(AM[words[0]]){aw=words[0];ai=AM[words[0]];if(words.length>=3){adj=words[1];noun=words[2];}else{if(NG[words[1]])return{error:'No adjective! Try "'+words[0]+' gut '+words[1]+'"'};adj=words[1];noun=null;}}
+  else{adj=words[0];noun=words.length>=2?words[1]:null;}
+  var gender=noun&&NG[noun]?NG[noun]:null;
+  if(!gender&&ai){gender=ai.gender;}
+  if(noun&&NG[noun])gender=NG[noun];
+  if(!gender)return{error:noun?'Unknown noun "'+cap(noun)+'". Try: Bier, Mann, Frau, Katze, Hund, Buch...':'Add a noun so I can find the gender!'};
+  var at=ai?ai.type:"none",cs=ai?ai.cas:"Nominativ";
+  var ending=END[at][cs][gender],ca=applyEnd(adj,ending);
+  var corrected=aw?cap(aw)+" "+ca+(noun?" "+cap(noun):""):cap(ca)+(noun?" "+cap(noun):"");
+  return{articleType:at,cas:cs,gender:gender,ending:ending,corrected:corrected,articleWord:aw};
+}
+
+var TREE={id:"root",children:[
+  {id:"definite",label:"Definite",sublabel:"der, die, das, dieser, jeder\u2026",color:C.a1,children:[
+    {id:"d-der",label:"der",sublabel:"masc. Nom",color:gc.m,leaf:true,ending:"-e",example:"der alte Mann",cas:"Nominativ",gender:"m"},
+    {id:"d-den",label:"den",sublabel:"masc. Akk",color:gc.m,leaf:true,ending:"-en",example:"den alten Mann",cas:"Akkusativ",gender:"m"},
+    {id:"d-dem-m",label:"dem",sublabel:"masc. Dat",color:gc.m,leaf:true,ending:"-en",example:"dem alten Mann",cas:"Dativ",gender:"m"},
+    {id:"d-dem-n",label:"dem",sublabel:"neut. Dat",color:gc.n,leaf:true,ending:"-en",example:"dem neuen Buch",cas:"Dativ",gender:"n"},
+    {id:"d-des-m",label:"des",sublabel:"masc. Gen",color:gc.m,leaf:true,ending:"-en",example:"des alten Mannes",cas:"Genitiv",gender:"m"},
+    {id:"d-des-n",label:"des",sublabel:"neut. Gen",color:gc.n,leaf:true,ending:"-en",example:"des neuen Buches",cas:"Genitiv",gender:"n"},
+    {id:"d-die-f",label:"die",sublabel:"fem. Nom/Akk",color:gc.f,leaf:true,ending:"-e",example:"die kleine Frau",cas:"Nominativ",gender:"f"},
+    {id:"d-der-f",label:"der",sublabel:"fem. Dat/Gen",color:gc.f,leaf:true,ending:"-en",example:"der kleinen Frau",cas:"Dativ",gender:"f"},
+    {id:"d-das",label:"das",sublabel:"neut. Nom/Akk",color:gc.n,leaf:true,ending:"-e",example:"das neue Buch",cas:"Nominativ",gender:"n"},
+    {id:"d-die-pl",label:"die",sublabel:"plural Nom/Akk",color:gc.pl,leaf:true,ending:"-en",example:"die guten Leute",cas:"Nominativ",gender:"pl"},
+    {id:"d-den-pl",label:"den",sublabel:"plural Dat",color:gc.pl,leaf:true,ending:"-en",example:"den guten Leuten",cas:"Dativ",gender:"pl"},
+    {id:"d-der-pl",label:"der",sublabel:"plural Gen",color:gc.pl,leaf:true,ending:"-en",example:"der guten Leute",cas:"Genitiv",gender:"pl"}
+  ]},
+  {id:"indefinite",label:"Indefinite",sublabel:"ein, eine, kein, mein, dein\u2026",color:C.a2,children:[
+    {id:"i-ein-m",label:"ein",sublabel:"masc. Nom",color:gc.m,leaf:true,ending:"-er \u26A1",example:"ein alter Mann",cas:"Nominativ",gender:"m",note:'"ein" has no ending \u2192 adjective shows gender!'},
+    {id:"i-einen",label:"einen",sublabel:"masc. Akk",color:gc.m,leaf:true,ending:"-en",example:"einen alten Mann",cas:"Akkusativ",gender:"m"},
+    {id:"i-einem-m",label:"einem",sublabel:"masc. Dat",color:gc.m,leaf:true,ending:"-en",example:"einem alten Mann",cas:"Dativ",gender:"m"},
+    {id:"i-einem-n",label:"einem",sublabel:"neut. Dat",color:gc.n,leaf:true,ending:"-en",example:"einem neuen Buch",cas:"Dativ",gender:"n"},
+    {id:"i-eines-m",label:"eines",sublabel:"masc. Gen",color:gc.m,leaf:true,ending:"-en",example:"eines alten Mannes",cas:"Genitiv",gender:"m"},
+    {id:"i-eines-n",label:"eines",sublabel:"neut. Gen",color:gc.n,leaf:true,ending:"-en",example:"eines neuen Buches",cas:"Genitiv",gender:"n"},
+    {id:"i-eine",label:"eine",sublabel:"fem. Nom/Akk",color:gc.f,leaf:true,ending:"-e",example:"eine kleine Frau",cas:"Nominativ",gender:"f"},
+    {id:"i-einer",label:"einer",sublabel:"fem. Dat/Gen",color:gc.f,leaf:true,ending:"-en",example:"einer kleinen Frau",cas:"Dativ",gender:"f"},
+    {id:"i-ein-n",label:"ein",sublabel:"neut. Nom/Akk",color:gc.n,leaf:true,ending:"-es \u26A1",example:"ein neues Buch",cas:"Nominativ",gender:"n",note:'"ein" has no ending \u2192 adjective shows gender!'}
+  ]},
+  {id:"none",label:"No article (\u00D8)",sublabel:"Adjective carries all the info",color:C.a3,children:(function(){
+    var cases=["Nominativ","Akkusativ","Dativ","Genitiv"];var gs=["m","f","n","pl"];
+    var gl={m:"masc",f:"fem",n:"neut",pl:"plural"};
+    var ex={Nominativ:{m:"kalter Kaffee",f:"frische Milch",n:"kaltes Wasser",pl:"gute Leute"},Akkusativ:{m:"kalten Kaffee",f:"frische Milch",n:"kaltes Wasser",pl:"gute Leute"},Dativ:{m:"kaltem Kaffee",f:"frischer Milch",n:"kaltem Wasser",pl:"guten Leuten"},Genitiv:{m:"kalten Kaffees",f:"frischer Milch",n:"kalten Wassers",pl:"guter Leute"}};
+    return cases.map(function(cs){return{id:"n-"+cs.toLowerCase().slice(0,3),label:cs,color:C.a3,children:gs.map(function(g){return{id:"n-"+cs.toLowerCase().slice(0,3)+"-"+g,label:gl[g]+": "+END.none[cs][g],color:gc[g],leaf:true,ending:END.none[cs][g],example:ex[cs][g],cas:cs,gender:g};})};});
+  })()}
+]};
+
+function findHL(parsed){
+  if(!parsed||parsed.error)return{};var ids={root:1};ids[parsed.articleType]=1;
+  var branch=TREE.children.find(function(c){return c.id===parsed.articleType;});
+  if(branch){(function search(ch){
+    for(var i=0;i<ch.length;i++){var c=ch[i];
+      if(c.leaf&&c.cas===parsed.cas&&c.gender===parsed.gender){ids[c.id]=1;return true;}
+      if(c.children&&search(c.children)){ids[c.id]=1;return true;}}return false;
+  })(branch.children);}return ids;
+}
+
+function TreeNode(props){
+  var node=props.node,depth=props.depth,exp=props.exp,toggle=props.toggle,hl=props.hl;
+  var isExp=!!exp[node.id],isHL=!!hl[node.id],hasKids=node.children&&node.children.length>0;
+  var color=node.color||C.tm;
+  return e("div",{style:{marginTop:depth===0?6:4}},
+    e("div",{onClick:hasKids?function(){toggle(node.id)}:undefined,style:{
+      display:"flex",alignItems:"center",gap:10,padding:node.leaf?"8px 12px":"10px 14px",
+      borderRadius:12,cursor:hasKids?"pointer":"default",
+      background:isHL?color+"20":C.card,border:"1.5px solid "+(isHL?color:C.bd),
+      transition:"all 0.25s ease",boxShadow:isHL?"0 0 14px "+color+"33":"none"}},
+      hasKids?e("span",{style:{color:color,fontSize:12,fontWeight:700,minWidth:14,textAlign:"center",
+        transition:"transform 0.2s",transform:isExp?"rotate(90deg)":"rotate(0)"}},"▶"):null,
+      node.leaf&&node.ending?e("span",{style:{fontFamily:"monospace",fontWeight:800,fontSize:15,color:color,
+        background:color+"22",padding:"2px 10px",borderRadius:6,border:"1px solid "+color+"44"}},node.ending):null,
+      e("div",{style:{flex:1,minWidth:0}},
+        e("span",{style:{fontWeight:700,color:isHL?color:C.tx,fontSize:depth<1?15:14}},node.label),
+        node.sublabel?e("span",{style:{marginLeft:8,fontSize:12,color:C.tm}},node.sublabel):null,
+        node.note&&isHL?e("div",{style:{fontSize:11,color:C.yl,marginTop:4}},"\uD83D\uDCA1 "+node.note):null
+      ),
+      node.example?e("span",{style:{fontSize:12,fontStyle:"italic",color:isHL?C.tx:C.tm,
+        background:isHL?color+"18":"transparent",padding:"2px 8px",borderRadius:6,
+        whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:200}},node.example):null
+    ),
+    isExp&&hasKids?e("div",{style:{marginLeft:18,borderLeft:"2px solid "+(isHL?color+"66":C.bd),paddingLeft:10,marginTop:2}},
+      node.children.map(function(ch){return e(TreeNode,{key:ch.id,node:ch,depth:depth+1,exp:exp,toggle:toggle,hl:hl});})
+    ):null
+  );
+}
+
+function App(){
+  var _exp=React.useState({root:1}),exp=_exp[0],setExp=_exp[1];
+  var _hl=React.useState({}),hl=_hl[0],setHL=_hl[1];
+  var _input=React.useState(""),input=_input[0],setInput=_input[1];
+  var _result=React.useState(null),result=_result[0],setResult=_result[1];
+
+  var gL={m:"Maskulin",f:"Feminin",n:"Neutrum",pl:"Plural"};
+  var tC={definite:C.a1,indefinite:C.a2,none:C.a3};
+
+  function toggle(id){setExp(function(prev){var n=Object.assign({},prev);if(n[id])delete n[id];else n[id]=1;return n;});}
+  function go(){if(!input.trim())return;var p=parseInput(input);setResult(p);var ids=findHL(p);setHL(ids);setExp(function(prev){return Object.assign({},prev,ids);});}
+  function expandAll(){var all={};(function c(n){all[n.id]=1;if(n.children)n.children.forEach(c);})(TREE);setExp(all);}
+
+  return e("div",{style:{padding:"24px 16px",background:C.bg,color:C.tx,fontFamily:"system-ui,sans-serif",borderRadius:16,minHeight:400}},
+    e("div",{style:{textAlign:"center",marginBottom:24}},
+      e("h2",{style:{fontSize:24,fontWeight:800,marginBottom:4,color:C.tx}},"German Adjective Declensions"),
+      e("p",{style:{fontSize:14,color:C.tm,margin:0}},"Type a phrase below \u2192 see the correct ending + highlighted path")
+    ),
+    // Input
+    e("div",{style:{marginBottom:24}},
+      e("div",{style:{display:"flex",gap:8,flexWrap:"wrap"}},
+        e("input",{type:"text",value:input,onChange:function(ev){setInput(ev.target.value);},
+          onKeyDown:function(ev){if(ev.key==="Enter")go();},
+          placeholder:'e.g. "ein kalt Bier" or "die groß Katze"',
+          style:{flex:1,minWidth:220,padding:"12px 16px",borderRadius:12,fontSize:15,
+            background:C.card,color:C.tx,border:"1.5px solid "+C.bd,outline:"none",fontFamily:"system-ui"}}),
+        e("button",{onClick:go,style:{padding:"12px 22px",borderRadius:12,fontSize:15,fontWeight:700,
+          cursor:"pointer",background:C.a1+"22",color:C.a1,border:"1.5px solid "+C.a1}},"Decline!")
+      ),
+      result&&!result.error?e("div",{style:{marginTop:14,padding:18,borderRadius:14,
+        background:"linear-gradient(135deg,"+C.gn+"10,"+C.a1+"10)",border:"2px solid "+C.gn+"55"}},
+        e("div",{style:{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}},
+          e("span",{style:{fontSize:22}},"\u2705"),
+          e("span",{style:{fontSize:22,fontWeight:800,color:C.gn}},result.corrected)
+        ),
+        e("div",{style:{display:"flex",gap:14,flexWrap:"wrap",fontSize:13,marginTop:10}},
+          e("span",{style:{color:C.tm}},"Type: ",e("strong",{style:{color:tC[result.articleType]}},result.articleType)),
+          e("span",{style:{color:C.tm}},"Case: ",e("strong",{style:{color:C.tx}},result.cas)),
+          e("span",{style:{color:C.tm}},"Gender: ",e("strong",{style:{color:gc[result.gender]}},gL[result.gender])),
+          e("span",{style:{color:C.tm}},"Ending: ",e("strong",{style:{color:C.yl,fontFamily:"monospace",fontSize:16}},result.ending))
+        )
+      ):null,
+      result&&result.error?e("div",{style:{marginTop:14,padding:14,borderRadius:14,
+        background:C.rd+"15",border:"1.5px solid "+C.rd+"44",color:C.rd,fontSize:14}},"\u26A0\uFE0F "+result.error):null
+    ),
+    // Controls
+    e("div",{style:{display:"flex",gap:8,marginBottom:10,justifyContent:"space-between",alignItems:"center"}},
+      e("span",{style:{fontSize:13,fontWeight:600,color:C.tm}},"Decision Tree"),
+      e("div",{style:{display:"flex",gap:6}},
+        e("button",{onClick:expandAll,style:{padding:"5px 12px",borderRadius:8,fontSize:11,fontWeight:600,cursor:"pointer",background:C.card,color:C.tm,border:"1px solid "+C.bd}},"Expand all"),
+        e("button",{onClick:function(){setExp({root:1});},style:{padding:"5px 12px",borderRadius:8,fontSize:11,fontWeight:600,cursor:"pointer",background:C.card,color:C.tm,border:"1px solid "+C.bd}},"Collapse")
+      )
+    ),
+    // Tree
+    TREE.children.map(function(ch){return e(TreeNode,{key:ch.id,node:ch,depth:0,exp:exp,toggle:toggle,hl:hl});}),
+    // Examples
+    e("div",{style:{marginTop:28,padding:18,borderRadius:14,background:C.card,border:"1px solid "+C.bd}},
+      e("h3",{style:{fontSize:14,fontWeight:700,marginBottom:10,color:C.yl}},"\uD83D\uDCA1 Try these examples"),
+      e("div",{style:{display:"flex",gap:8,flexWrap:"wrap"}},
+        ["ein kalt Bier","die groß Katze","das neu Buch","kalt Wasser","mein alt Hund","eine schön Blume"].map(function(ex){
+          return e("span",{key:ex,style:{padding:"6px 12px",borderRadius:8,fontSize:13,background:C.bg,color:C.tm,border:"1px solid "+C.bd,cursor:"default"}},ex);
+        })
+      )
+    )
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("german-declension-app")).render(e(App));
+})();
+</script>
