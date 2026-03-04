@@ -8,6 +8,8 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: system-ui, -apple-system, sans-serif; background: #0f172a; }
   #root { min-height: 100vh; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+  .loading-dot { animation: pulse 1s infinite; }
 </style>
 </head>
 <body>
@@ -22,27 +24,153 @@ var gc={m:C.a1,f:C.a5,n:C.a4,pl:C.a3};
 
 var END={definite:{Nominativ:{m:"-e",f:"-e",n:"-e",pl:"-en"},Akkusativ:{m:"-en",f:"-e",n:"-e",pl:"-en"},Dativ:{m:"-en",f:"-en",n:"-en",pl:"-en"},Genitiv:{m:"-en",f:"-en",n:"-en",pl:"-en"}},indefinite:{Nominativ:{m:"-er",f:"-e",n:"-es",pl:"-en"},Akkusativ:{m:"-en",f:"-e",n:"-es",pl:"-en"},Dativ:{m:"-en",f:"-en",n:"-en",pl:"-en"},Genitiv:{m:"-en",f:"-en",n:"-en",pl:"-en"}},none:{Nominativ:{m:"-er",f:"-e",n:"-es",pl:"-e"},Akkusativ:{m:"-en",f:"-e",n:"-es",pl:"-e"},Dativ:{m:"-em",f:"-er",n:"-em",pl:"-en"},Genitiv:{m:"-en",f:"-er",n:"-en",pl:"-er"}}};
 
-var AM={der:{type:"definite",gender:"m",cas:"Nominativ"},den:{type:"definite",gender:"m",cas:"Akkusativ"},dem:{type:"definite",gender:"m",cas:"Dativ"},des:{type:"definite",gender:"m",cas:"Genitiv"},die:{type:"definite",gender:"f",cas:"Nominativ"},das:{type:"definite",gender:"n",cas:"Nominativ"},ein:{type:"indefinite",gender:"m",cas:"Nominativ"},eine:{type:"indefinite",gender:"f",cas:"Nominativ"},einen:{type:"indefinite",gender:"m",cas:"Akkusativ"},einem:{type:"indefinite",gender:"m",cas:"Dativ"},einer:{type:"indefinite",gender:"f",cas:"Dativ"},eines:{type:"indefinite",gender:"m",cas:"Genitiv"},kein:{type:"indefinite",gender:"m",cas:"Nominativ"},keine:{type:"indefinite",gender:"f",cas:"Nominativ"},keinen:{type:"indefinite",gender:"m",cas:"Akkusativ"},keinem:{type:"indefinite",gender:"m",cas:"Dativ"},keiner:{type:"indefinite",gender:"f",cas:"Dativ"},keines:{type:"indefinite",gender:"m",cas:"Genitiv"},mein:{type:"indefinite",gender:"m",cas:"Nominativ"},meine:{type:"indefinite",gender:"f",cas:"Nominativ"},meinen:{type:"indefinite",gender:"m",cas:"Akkusativ"},meinem:{type:"indefinite",gender:"m",cas:"Dativ"},meiner:{type:"indefinite",gender:"f",cas:"Dativ"},meines:{type:"indefinite",gender:"m",cas:"Genitiv"},dein:{type:"indefinite",gender:"m",cas:"Nominativ"},deine:{type:"indefinite",gender:"f",cas:"Nominativ"},sein:{type:"indefinite",gender:"m",cas:"Nominativ"},seine:{type:"indefinite",gender:"f",cas:"Nominativ"},ihr:{type:"indefinite",gender:"m",cas:"Nominativ"},ihre:{type:"indefinite",gender:"f",cas:"Nominativ"},unser:{type:"indefinite",gender:"m",cas:"Nominativ"},unsere:{type:"indefinite",gender:"f",cas:"Nominativ"},dieser:{type:"definite",gender:"m",cas:"Nominativ"},diese:{type:"definite",gender:"f",cas:"Nominativ"},dieses:{type:"definite",gender:"n",cas:"Nominativ"},jeder:{type:"definite",gender:"m",cas:"Nominativ"},jede:{type:"definite",gender:"f",cas:"Nominativ"},jedes:{type:"definite",gender:"n",cas:"Nominativ"},welcher:{type:"definite",gender:"m",cas:"Nominativ"},welche:{type:"definite",gender:"f",cas:"Nominativ"},welches:{type:"definite",gender:"n",cas:"Nominativ"}};
+var ARTICLE_BASES={der:{type:"definite",base:"def"},die:{type:"definite",base:"def"},das:{type:"definite",base:"def"},den:{type:"definite",base:"def"},dem:{type:"definite",base:"def"},des:{type:"definite",base:"def"},dieser:{type:"definite",base:"dies"},diese:{type:"definite",base:"dies"},dieses:{type:"definite",base:"dies"},diesem:{type:"definite",base:"dies"},diesen:{type:"definite",base:"dies"},jeder:{type:"definite",base:"jed"},jede:{type:"definite",base:"jed"},jedes:{type:"definite",base:"jed"},jedem:{type:"definite",base:"jed"},jeden:{type:"definite",base:"jed"},welcher:{type:"definite",base:"welch"},welche:{type:"definite",base:"welch"},welches:{type:"definite",base:"welch"},welchem:{type:"definite",base:"welch"},welchen:{type:"definite",base:"welch"},ein:{type:"indefinite",base:"ein"},eine:{type:"indefinite",base:"ein"},einen:{type:"indefinite",base:"ein"},einem:{type:"indefinite",base:"ein"},einer:{type:"indefinite",base:"ein"},eines:{type:"indefinite",base:"ein"},kein:{type:"indefinite",base:"kein"},keine:{type:"indefinite",base:"kein"},keinen:{type:"indefinite",base:"kein"},keinem:{type:"indefinite",base:"kein"},keiner:{type:"indefinite",base:"kein"},keines:{type:"indefinite",base:"kein"},mein:{type:"indefinite",base:"mein"},meine:{type:"indefinite",base:"mein"},meinen:{type:"indefinite",base:"mein"},meinem:{type:"indefinite",base:"mein"},meiner:{type:"indefinite",base:"mein"},meines:{type:"indefinite",base:"mein"},dein:{type:"indefinite",base:"dein"},deine:{type:"indefinite",base:"dein"},deinen:{type:"indefinite",base:"dein"},deinem:{type:"indefinite",base:"dein"},deiner:{type:"indefinite",base:"dein"},deines:{type:"indefinite",base:"dein"},sein:{type:"indefinite",base:"sein"},seine:{type:"indefinite",base:"sein"},seinen:{type:"indefinite",base:"sein"},seinem:{type:"indefinite",base:"sein"},seiner:{type:"indefinite",base:"sein"},seines:{type:"indefinite",base:"sein"},ihr:{type:"indefinite",base:"ihr"},ihre:{type:"indefinite",base:"ihr"},ihren:{type:"indefinite",base:"ihr"},ihrem:{type:"indefinite",base:"ihr"},ihrer:{type:"indefinite",base:"ihr"},ihres:{type:"indefinite",base:"ihr"},unser:{type:"indefinite",base:"unser"},unsere:{type:"indefinite",base:"unser"},unseren:{type:"indefinite",base:"unser"},unserem:{type:"indefinite",base:"unser"},unserer:{type:"indefinite",base:"unser"},unseres:{type:"indefinite",base:"unser"},euer:{type:"indefinite",base:"euer"},eure:{type:"indefinite",base:"eur"},euren:{type:"indefinite",base:"eur"},eurem:{type:"indefinite",base:"eur"},eurer:{type:"indefinite",base:"eur"},eures:{type:"indefinite",base:"eur"}};
 
-var NG={mann:"m",junge:"m",hund:"m",tisch:"m",stuhl:"m",baum:"m",apfel:"m",wagen:"m",tag:"m",morgen:"m",abend:"m",monat:"m",sommer:"m",winter:"m",regen:"m",schnee:"m",wind:"m",berg:"m",fluss:"m",wald:"m",garten:"m",park:"m",markt:"m",laden:"m",wein:"m",kuchen:"m",fisch:"m",vogel:"m",schuh:"m",hut:"m",mantel:"m",rock:"m",koffer:"m",computer:"m",film:"m",brief:"m",freund:"m",bruder:"m",vater:"m",sohn:"m",onkel:"m",arzt:"m",lehrer:"m",student:"m",chef:"m",bus:"m",zug:"m",kaffee:"m",tee:"m",salat:"m",frau:"f",mutter:"f",tochter:"f",schwester:"f",tante:"f",freundin:"f",katze:"f",blume:"f",lampe:"f",tasche:"f",uhr:"f",stadt:"f",schule:"f",kirche:"f",milch:"f",butter:"f",suppe:"f",zeitung:"f",musik:"f",kunst:"f",zeit:"f",nacht:"f",woche:"f",stunde:"f",arbeit:"f",reise:"f",sprache:"f",farbe:"f",wohnung:"f",jacke:"f",hose:"f",brille:"f",bank:"f",flasche:"f",kind:"n",buch:"n",haus:"n",auto:"n",bier:"n",brot:"n",wasser:"n",glas:"n",fenster:"n",zimmer:"n",bett:"n",bild:"n",lied:"n",spiel:"n",tier:"n",pferd:"n",ei:"n",land:"n",meer:"n",essen:"n",kleid:"n",hemd:"n",hotel:"n",restaurant:"n",telefon:"n",radio:"n",problem:"n",geschenk:"n",kino:"n",museum:"n",sofa:"n",leute:"pl",eltern:"pl",geschwister:"pl",ferien:"pl"};
+var DEF_FORMS={Nominativ:{m:"der",f:"die",n:"das",pl:"die"},Akkusativ:{m:"den",f:"die",n:"das",pl:"die"},Dativ:{m:"dem",f:"der",n:"dem",pl:"den"},Genitiv:{m:"des",f:"der",n:"des",pl:"der"}};
+
+function diesLikeForm(stem,cas,g){var s={Nominativ:{m:"er",f:"e",n:"es",pl:"e"},Akkusativ:{m:"en",f:"e",n:"es",pl:"e"},Dativ:{m:"em",f:"er",n:"em",pl:"en"},Genitiv:{m:"es",f:"er",n:"es",pl:"er"}};return stem+s[cas][g];}
+function einLikeForm(stem,cas,g){var s={Nominativ:{m:"",f:"e",n:"",pl:"e"},Akkusativ:{m:"en",f:"e",n:"",pl:"e"},Dativ:{m:"em",f:"er",n:"em",pl:"en"},Genitiv:{m:"es",f:"er",n:"es",pl:"er"}};return stem+s[cas][g];}
+function correctArticle(aw,cas,g){var info=ARTICLE_BASES[aw.toLowerCase()];if(!info)return aw;var b=info.base;if(b==="def")return DEF_FORMS[cas][g];if(b==="dies")return diesLikeForm("dies",cas,g);if(b==="jed")return diesLikeForm("jed",cas,g);if(b==="welch")return diesLikeForm("welch",cas,g);return einLikeForm(b,cas,g);}
+function detectCase(w){w=w.toLowerCase();if(w==="der"||w==="die"||w==="das")return"Nominativ";if(w==="den")return"Akkusativ";if(w==="dem")return"Dativ";if(w==="des")return"Genitiv";if(w.endsWith("em"))return"Dativ";if(w==="dieses"||w==="jedes"||w==="welches")return"Nominativ";if(w.endsWith("es"))return"Genitiv";if(w.endsWith("en"))return"Akkusativ";if(w==="einer"||w==="keiner"||w==="meiner"||w==="deiner"||w==="seiner"||w==="ihrer"||w==="unserer"||w==="eurer")return"Dativ";if(w==="diesem"||w==="jedem"||w==="welchem")return"Dativ";if(w==="diesen"||w==="jeden"||w==="welchen")return"Akkusativ";if(w==="dieser"||w==="jeder"||w==="welcher")return"Nominativ";return"Nominativ";}
+
+var genderCache={};
+
+// GENDER LOOKUP: Try 3 different strategies
+function lookupGender(noun, setDebug) {
+  var lw=noun.toLowerCase();
+  if(genderCache[lw])return Promise.resolve(genderCache[lw]);
+  var capWord=lw.charAt(0).toUpperCase()+lw.slice(1);
+
+  // Strategy 1: en.wiktionary action=query (most CORS-friendly)
+  function tryEnQuery(){
+    var url="https://en.wiktionary.org/w/api.php?action=query&titles="+encodeURIComponent(capWord)+"&prop=revisions&rvprop=content&rvslots=main&format=json&origin=*";
+    if(setDebug)setDebug("Trying en.wiktionary query API...");
+    return fetch(url).then(function(r){return r.json();}).then(function(data){
+      if(!data.query||!data.query.pages)return null;
+      var pages=data.query.pages;var keys=Object.keys(pages);
+      for(var i=0;i<keys.length;i++){
+        var pg=pages[keys[i]];if(pg.missing!==undefined)continue;
+        if(pg.revisions&&pg.revisions[0]){
+          var rev=pg.revisions[0];
+          var txt=null;
+          if(rev.slots&&rev.slots.main)txt=rev.slots.main["*"]||rev.slots.main.content;
+          else if(rev["*"])txt=rev["*"];
+          if(txt){var g=extractGender(txt);if(g)return g;}
+        }
+      }
+      return null;
+    }).catch(function(err){if(setDebug)setDebug("en query failed: "+err.message);return null;});
+  }
+
+  // Strategy 2: en.wiktionary action=parse
+  function tryEnParse(){
+    var url="https://en.wiktionary.org/w/api.php?action=parse&page="+encodeURIComponent(capWord)+"&prop=wikitext&format=json&origin=*";
+    if(setDebug)setDebug("Trying en.wiktionary parse API...");
+    return fetch(url).then(function(r){return r.json();}).then(function(data){
+      if(!data.parse||!data.parse.wikitext)return null;
+      var txt=data.parse.wikitext["*"]||"";
+      return extractGender(txt);
+    }).catch(function(err){if(setDebug)setDebug("en parse failed: "+err.message);return null;});
+  }
+
+  // Strategy 3: de.wiktionary (German Wiktionary) - different template format
+  function tryDeWikt(){
+    var url="https://de.wiktionary.org/w/api.php?action=query&titles="+encodeURIComponent(capWord)+"&prop=revisions&rvprop=content&rvslots=main&format=json&origin=*";
+    if(setDebug)setDebug("Trying de.wiktionary...");
+    return fetch(url).then(function(r){return r.json();}).then(function(data){
+      if(!data.query||!data.query.pages)return null;
+      var pages=data.query.pages;var keys=Object.keys(pages);
+      for(var i=0;i<keys.length;i++){
+        var pg=pages[keys[i]];if(pg.missing!==undefined)continue;
+        if(pg.revisions&&pg.revisions[0]){
+          var rev=pg.revisions[0];
+          var txt=null;
+          if(rev.slots&&rev.slots.main)txt=rev.slots.main["*"]||rev.slots.main.content;
+          else if(rev["*"])txt=rev["*"];
+          if(txt){var g=extractGenderDE(txt);if(g)return g;}
+        }
+      }
+      return null;
+    }).catch(function(err){if(setDebug)setDebug("de wikt failed: "+err.message);return null;});
+  }
+
+  return tryEnQuery().then(function(g){
+    if(g){genderCache[lw]=g;return g;}
+    return tryEnParse();
+  }).then(function(g){
+    if(g&&g.length===1){genderCache[lw]=g;return g;}
+    return tryDeWikt();
+  }).then(function(g){
+    if(g&&g.length===1){genderCache[lw]=g;return g;}
+    return null;
+  });
+}
+
+// Extract gender from English Wiktionary wikitext
+function extractGender(txt){
+  var deIdx=txt.indexOf("==German==");
+  if(deIdx===-1)return null;
+  var section=txt.substring(deIdx,deIdx+5000);
+  var patterns=[
+    /\{\{de-noun\|([mfn])/,           // {{de-noun|f}}
+    /\{\{de-noun\|<([mfn])>/,          // {{de-noun|<f>}}
+    /\|g=([mfn])/,                      // |g=f
+    /\{\{head\|de\|noun\|g=([mfn])/,   // {{head|de|noun|g=f}}
+    /\{\{g\|([mfn])\}\}/,              // {{g|f}}
+    /\bgenitive\b.*?\b(masculine|feminine|neuter)\b/i,
+  ];
+  for(var i=0;i<patterns.length;i++){
+    var m=section.match(patterns[i]);
+    if(m){
+      if(m[1]==="masculine")return"m";
+      if(m[1]==="feminine")return"f";
+      if(m[1]==="neuter")return"n";
+      return m[1];
+    }
+  }
+  // Try to find "Noun" section with f/m/n marker
+  var nounMatch=section.match(/===Noun===[\s\S]{0,500}?\b([mfn])\s/);
+  if(nounMatch)return nounMatch[1];
+  return null;
+}
+
+// Extract gender from German Wiktionary wikitext
+function extractGenderDE(txt){
+  // {{Deutsch Substantiv Übersicht ... |Genus=f  or  {{Wortart|Substantiv|Deutsch}}, {{f}}
+  var patterns=[
+    /\{\{([mfn])\}\}/,                       // {{f}} {{m}} {{n}}
+    /\|Genus=([mfn])/,                        // |Genus=f
+    /Wortart\|Substantiv\|Deutsch\}\},\s*\{\{([mfn])\}\}/, // Substantiv + gender
+    /Substantiv[\s\S]{0,200}\{\{([mfn])\}\}/, // Substantiv ... {{f}}
+  ];
+  for(var i=0;i<patterns.length;i++){
+    var m=txt.match(patterns[i]);
+    if(m)return m[1];
+  }
+  return null;
+}
 
 function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
 function applyEnd(adj,ending){var stem=adj.toLowerCase().trim();var sfs=["en","em","er","es","e"];for(var i=0;i<sfs.length;i++){if(stem.endsWith(sfs[i])&&stem.length>sfs[i].length+2){stem=stem.slice(0,-sfs[i].length);break;}}return stem+ending.replace("-","");}
 
-function parseInput(input){
+function buildResult(input,gender){
   var words=input.trim().toLowerCase().split(/\s+/).filter(Boolean);
   if(words.length<2)return{error:'Enter at least 2 words, e.g. "ein kalt Bier"'};
-  var aw=null,ai=null,adj,noun;
-  if(AM[words[0]]){aw=words[0];ai=AM[words[0]];if(words.length>=3){adj=words[1];noun=words[2];}else{if(NG[words[1]])return{error:'No adjective! Try "'+words[0]+' gut '+words[1]+'"'};adj=words[1];noun=null;}}
+  var aw=null,adj,noun;var artInfo=ARTICLE_BASES[words[0]];
+  if(artInfo){aw=words[0];if(words.length>=3){adj=words[1];noun=words[2];}else{adj=words[1];noun=null;}}
   else{adj=words[0];noun=words.length>=2?words[1]:null;}
-  var gender=noun&&NG[noun]?NG[noun]:null;
-  if(!gender&&ai){gender=ai.gender;}
-  if(noun&&NG[noun])gender=NG[noun];
-  if(!gender)return{error:noun?'Unknown noun "'+cap(noun)+'". Try: Bier, Mann, Frau, Katze, Hund, Buch...':'Add a noun so I can find the gender!'};
-  var at=ai?ai.type:"none",cs=ai?ai.cas:"Nominativ";
-  var ending=END[at][cs][gender],ca=applyEnd(adj,ending);
-  var corrected=aw?cap(aw)+" "+ca+(noun?" "+cap(noun):""):cap(ca)+(noun?" "+cap(noun):"");
-  return{articleType:at,cas:cs,gender:gender,ending:ending,corrected:corrected,articleWord:aw};
+  if(!gender)return{error:'Could not determine gender'};
+  var cas=aw?detectCase(aw):"Nominativ";
+  var articleType=artInfo?artInfo.type:"none";
+  var ending=END[articleType][cas][gender];
+  var correctedAdj=applyEnd(adj,ending);
+  var correctedArt=aw?correctArticle(aw,cas,gender):null;
+  var parts=[];if(correctedArt)parts.push(cap(correctedArt));parts.push(correctedAdj);if(noun)parts.push(cap(noun));
+  var corrected=parts.join(" ");
+  var fixes=[];
+  if(aw&&correctedArt&&aw.toLowerCase()!==correctedArt.toLowerCase())fixes.push(aw+" \u2192 "+correctedArt);
+  if(adj.toLowerCase()!==correctedAdj.toLowerCase())fixes.push(adj+" \u2192 "+correctedAdj);
+  return{articleType:articleType,cas:cas,gender:gender,ending:ending,corrected:corrected,articleWord:correctedArt,fixes:fixes};
 }
 
 var TREE={id:"root",children:[
@@ -79,42 +207,23 @@ var TREE={id:"root",children:[
   })()}
 ]};
 
-function findHL(parsed){
-  if(!parsed||parsed.error)return{};var ids={root:1};ids[parsed.articleType]=1;
-  var branch=TREE.children.find(function(c){return c.id===parsed.articleType;});
-  if(branch){(function search(ch){
-    for(var i=0;i<ch.length;i++){var c=ch[i];
-      if(c.leaf&&c.cas===parsed.cas&&c.gender===parsed.gender){ids[c.id]=1;return true;}
-      if(c.children&&search(c.children)){ids[c.id]=1;return true;}}return false;
-  })(branch.children);}return ids;
-}
+function findHL(p){if(!p||p.error)return{};var ids={root:1};ids[p.articleType]=1;var branch=TREE.children.find(function(c){return c.id===p.articleType;});if(branch){(function s(ch){for(var i=0;i<ch.length;i++){var c=ch[i];if(c.leaf&&c.cas===p.cas&&c.gender===p.gender){ids[c.id]=1;return true;}if(c.children&&s(c.children)){ids[c.id]=1;return true;}}return false;})(branch.children);}return ids;}
 
 function TreeNode(props){
   var node=props.node,depth=props.depth,exp=props.exp,toggle=props.toggle,hl=props.hl;
   var isExp=!!exp[node.id],isHL=!!hl[node.id],hasKids=node.children&&node.children.length>0;
   var color=node.color||C.tm;
   return e("div",{style:{marginTop:depth===0?6:4}},
-    e("div",{onClick:hasKids?function(){toggle(node.id);}:undefined,style:{
-      display:"flex",alignItems:"center",gap:10,padding:node.leaf?"8px 12px":"10px 14px",
-      borderRadius:12,cursor:hasKids?"pointer":"default",
-      background:isHL?color+"20":C.card,border:"1.5px solid "+(isHL?color:C.bd),
-      transition:"all 0.25s ease",boxShadow:isHL?"0 0 14px "+color+"33":"none"}},
-      hasKids?e("span",{style:{color:color,fontSize:12,fontWeight:700,minWidth:14,textAlign:"center",
-        transition:"transform 0.2s",transform:isExp?"rotate(90deg)":"rotate(0)"}},"\u25B6"):null,
-      node.leaf&&node.ending?e("span",{style:{fontFamily:"monospace",fontWeight:800,fontSize:15,color:color,
-        background:color+"22",padding:"2px 10px",borderRadius:6,border:"1px solid "+color+"44"}},node.ending):null,
+    e("div",{onClick:hasKids?function(){toggle(node.id);}:undefined,style:{display:"flex",alignItems:"center",gap:10,padding:node.leaf?"8px 12px":"10px 14px",borderRadius:12,cursor:hasKids?"pointer":"default",background:isHL?color+"20":C.card,border:"1.5px solid "+(isHL?color:C.bd),transition:"all 0.25s ease",boxShadow:isHL?"0 0 14px "+color+"33":"none"}},
+      hasKids?e("span",{style:{color:color,fontSize:12,fontWeight:700,minWidth:14,textAlign:"center",transition:"transform 0.2s",transform:isExp?"rotate(90deg)":"rotate(0)"}},"\u25B6"):null,
+      node.leaf&&node.ending?e("span",{style:{fontFamily:"monospace",fontWeight:800,fontSize:15,color:color,background:color+"22",padding:"2px 10px",borderRadius:6,border:"1px solid "+color+"44"}},node.ending):null,
       e("div",{style:{flex:1,minWidth:0}},
         e("span",{style:{fontWeight:700,color:isHL?color:C.tx,fontSize:depth<1?15:14}},node.label),
         node.sublabel?e("span",{style:{marginLeft:8,fontSize:12,color:C.tm}},node.sublabel):null,
-        node.note&&isHL?e("div",{style:{fontSize:11,color:C.yl,marginTop:4}},"\uD83D\uDCA1 "+node.note):null
-      ),
-      node.example?e("span",{style:{fontSize:12,fontStyle:"italic",color:isHL?C.tx:C.tm,
-        background:isHL?color+"18":"transparent",padding:"2px 8px",borderRadius:6,
-        whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:200}},node.example):null
+        node.note&&isHL?e("div",{style:{fontSize:11,color:C.yl,marginTop:4}},"\uD83D\uDCA1 "+node.note):null),
+      node.example?e("span",{style:{fontSize:12,fontStyle:"italic",color:isHL?C.tx:C.tm,background:isHL?color+"18":"transparent",padding:"2px 8px",borderRadius:6,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",maxWidth:200}},node.example):null
     ),
-    isExp&&hasKids?e("div",{style:{marginLeft:18,borderLeft:"2px solid "+(isHL?color+"66":C.bd),paddingLeft:10,marginTop:2}},
-      node.children.map(function(ch){return e(TreeNode,{key:ch.id,node:ch,depth:depth+1,exp:exp,toggle:toggle,hl:hl});})
-    ):null
+    isExp&&hasKids?e("div",{style:{marginLeft:18,borderLeft:"2px solid "+(isHL?color+"66":C.bd),paddingLeft:10,marginTop:2}},node.children.map(function(ch){return e(TreeNode,{key:ch.id,node:ch,depth:depth+1,exp:exp,toggle:toggle,hl:hl});})):null
   );
 }
 
@@ -123,67 +232,77 @@ function App(){
   var _hl=React.useState({}),hl=_hl[0],setHL=_hl[1];
   var _input=React.useState(""),input=_input[0],setInput=_input[1];
   var _result=React.useState(null),result=_result[0],setResult=_result[1];
+  var _loading=React.useState(false),loading=_loading[0],setLoading=_loading[1];
+  var _debug=React.useState(""),debug=_debug[0],setDebug=_debug[1];
 
   var gL={m:"Maskulin",f:"Feminin",n:"Neutrum",pl:"Plural"};
   var tC={definite:C.a1,indefinite:C.a2,none:C.a3};
 
   function toggle(id){setExp(function(prev){var n=Object.assign({},prev);if(n[id])delete n[id];else n[id]=1;return n;});}
-  function go(){if(!input.trim())return;var p=parseInput(input);setResult(p);var ids=findHL(p);setHL(ids);setExp(function(prev){return Object.assign({},prev,ids);});}
+
+  function go(){
+    if(!input.trim())return;
+    var words=input.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    var noun=null;var artInfo=ARTICLE_BASES[words[0]];
+    if(artInfo&&words.length>=3)noun=words[2];
+    else if(artInfo&&words.length===2)noun=null;
+    else if(words.length>=2)noun=words[1];
+    if(!noun){setResult({error:'Add a noun, e.g. "ein jung Frau"'});return;}
+
+    var cached=genderCache[noun.toLowerCase()];
+    if(cached){var p=buildResult(input,cached);setResult(p);var ids=findHL(p);setHL(ids);setExp(function(prev){return Object.assign({},prev,ids);});return;}
+
+    setLoading(true);setResult(null);setDebug("");
+    lookupGender(noun,setDebug).then(function(gender){
+      setLoading(false);
+      if(!gender){
+        setResult({error:'Could not find gender for "'+cap(noun)+'". Debug: '+debug});
+        return;
+      }
+      setDebug("Found: "+gender);
+      var p=buildResult(input,gender);setResult(p);
+      var ids=findHL(p);setHL(ids);setExp(function(prev){return Object.assign({},prev,ids);});
+    });
+  }
+
   function expandAll(){var all={};(function c(n){all[n.id]=1;if(n.children)n.children.forEach(c);})(TREE);setExp(all);}
 
   return e("div",{style:{minHeight:"100vh",padding:"24px 16px",background:C.bg,color:C.tx,fontFamily:"system-ui,sans-serif"}},
     e("div",{style:{maxWidth:740,margin:"0 auto"}},
       e("div",{style:{textAlign:"center",marginBottom:24}},
         e("h1",{style:{fontSize:26,fontWeight:800,marginBottom:4,color:C.tx}},"German Adjective Declensions"),
-        e("p",{style:{fontSize:14,color:C.tm,margin:0}},"Type a phrase below \u2192 see the correct ending + highlighted path")
+        e("p",{style:{fontSize:14,color:C.tm,margin:0}},"Type a rough phrase \u2192 get the fully corrected form (article + adjective + noun)")
       ),
-      // Input area
       e("div",{style:{marginBottom:24}},
         e("div",{style:{display:"flex",gap:8,flexWrap:"wrap"}},
-          e("input",{type:"text",value:input,
-            onChange:function(ev){setInput(ev.target.value);},
-            onKeyDown:function(ev){if(ev.key==="Enter")go();},
-            placeholder:'e.g. "ein kalt Bier" or "die gro\u00DF Katze"',
-            style:{flex:1,minWidth:220,padding:"12px 16px",borderRadius:12,fontSize:15,
-              background:C.card,color:C.tx,border:"1.5px solid "+C.bd,outline:"none",fontFamily:"system-ui"}}),
-          e("button",{onClick:go,style:{padding:"12px 22px",borderRadius:12,fontSize:15,fontWeight:700,
-            cursor:"pointer",background:C.a1+"22",color:C.a1,border:"1.5px solid "+C.a1}},"Decline!")
+          e("input",{type:"text",value:input,onChange:function(ev){setInput(ev.target.value);},onKeyDown:function(ev){if(ev.key==="Enter")go();},placeholder:'e.g. "ein jung Frau" or "ein kalt Bier" or "kalt Wasser"',style:{flex:1,minWidth:220,padding:"12px 16px",borderRadius:12,fontSize:15,background:C.card,color:C.tx,border:"1.5px solid "+C.bd,outline:"none",fontFamily:"system-ui"}}),
+          e("button",{onClick:go,disabled:loading,style:{padding:"12px 22px",borderRadius:12,fontSize:15,fontWeight:700,cursor:loading?"wait":"pointer",background:C.a1+"22",color:C.a1,border:"1.5px solid "+C.a1,opacity:loading?0.6:1}},loading?"Looking up\u2026":"Decline!")
         ),
-        result&&!result.error?e("div",{style:{marginTop:14,padding:18,borderRadius:14,
-          background:"linear-gradient(135deg,"+C.gn+"10,"+C.a1+"10)",border:"2px solid "+C.gn+"55"}},
+        loading?e("div",{style:{marginTop:14,padding:14,borderRadius:14,background:C.a1+"15",border:"1.5px solid "+C.a1+"44",color:C.a1,fontSize:14,textAlign:"center"}},e("span",{className:"loading-dot"},"\uD83D\uDD0D "+debug||"Looking up noun gender...")):null,
+        result&&!result.error?e("div",{style:{marginTop:14,padding:18,borderRadius:14,background:"linear-gradient(135deg,"+C.gn+"10,"+C.a1+"10)",border:"2px solid "+C.gn+"55"}},
           e("div",{style:{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}},
             e("span",{style:{fontSize:22}},"\u2705"),
-            e("span",{style:{fontSize:22,fontWeight:800,color:C.gn}},result.corrected)
-          ),
+            e("span",{style:{fontSize:22,fontWeight:800,color:C.gn}},result.corrected)),
           e("div",{style:{display:"flex",gap:14,flexWrap:"wrap",fontSize:13,marginTop:10}},
             e("span",{style:{color:C.tm}},"Type: ",e("strong",{style:{color:tC[result.articleType]}},result.articleType)),
             e("span",{style:{color:C.tm}},"Case: ",e("strong",{style:{color:C.tx}},result.cas)),
             e("span",{style:{color:C.tm}},"Gender: ",e("strong",{style:{color:gc[result.gender]}},gL[result.gender])),
-            e("span",{style:{color:C.tm}},"Ending: ",e("strong",{style:{color:C.yl,fontFamily:"monospace",fontSize:16}},result.ending))
-          )
+            e("span",{style:{color:C.tm}},"Ending: ",e("strong",{style:{color:C.yl,fontFamily:"monospace",fontSize:16}},result.ending))),
+          result.fixes&&result.fixes.length>0?e("div",{style:{marginTop:10,fontSize:12,color:C.a4}},"\uD83D\uDD27 Fixed: ",result.fixes.join(", ")):null
         ):null,
-        result&&result.error?e("div",{style:{marginTop:14,padding:14,borderRadius:14,
-          background:C.rd+"15",border:"1.5px solid "+C.rd+"44",color:C.rd,fontSize:14}},"\u26A0\uFE0F "+result.error):null
+        result&&result.error&&!loading?e("div",{style:{marginTop:14,padding:14,borderRadius:14,background:C.rd+"15",border:"1.5px solid "+C.rd+"44",color:C.rd,fontSize:14}},"\u26A0\uFE0F "+result.error):null
       ),
-      // Controls
       e("div",{style:{display:"flex",gap:8,marginBottom:10,justifyContent:"space-between",alignItems:"center"}},
         e("span",{style:{fontSize:13,fontWeight:600,color:C.tm}},"Decision Tree"),
         e("div",{style:{display:"flex",gap:6}},
           e("button",{onClick:expandAll,style:{padding:"5px 12px",borderRadius:8,fontSize:11,fontWeight:600,cursor:"pointer",background:C.card,color:C.tm,border:"1px solid "+C.bd}},"Expand all"),
-          e("button",{onClick:function(){setExp({root:1});},style:{padding:"5px 12px",borderRadius:8,fontSize:11,fontWeight:600,cursor:"pointer",background:C.card,color:C.tm,border:"1px solid "+C.bd}},"Collapse")
-        )
-      ),
-      // Tree
+          e("button",{onClick:function(){setExp({root:1});},style:{padding:"5px 12px",borderRadius:8,fontSize:11,fontWeight:600,cursor:"pointer",background:C.card,color:C.tm,border:"1px solid "+C.bd}},"Collapse"))),
       TREE.children.map(function(ch){return e(TreeNode,{key:ch.id,node:ch,depth:0,exp:exp,toggle:toggle,hl:hl});}),
-      // Examples
       e("div",{style:{marginTop:28,padding:18,borderRadius:14,background:C.card,border:"1px solid "+C.bd}},
-        e("h3",{style:{fontSize:14,fontWeight:700,marginBottom:10,color:C.yl}},"\uD83D\uDCA1 Try these examples"),
+        e("h3",{style:{fontSize:14,fontWeight:700,marginBottom:10,color:C.yl}},"\uD83D\uDCA1 Try these \u2014 articles & adjectives get auto-corrected!"),
         e("div",{style:{display:"flex",gap:8,flexWrap:"wrap"}},
-          ["ein kalt Bier","die gro\u00DF Katze","das neu Buch","kalt Wasser","mein alt Hund","eine sch\u00F6n Blume"].map(function(ex){
-            return e("span",{key:ex,style:{padding:"6px 12px",borderRadius:8,fontSize:13,background:C.bg,color:C.tm,border:"1px solid "+C.bd,cursor:"default"}},ex);
-          })
-        )
-      )
+          ["ein jung Frau","ein kalt Bier","der lang Geschichte","das alt Auto","kalt Wasser","mein klein Katze","ein gut Freund"].map(function(ex){return e("span",{key:ex,style:{padding:"6px 12px",borderRadius:8,fontSize:13,background:C.bg,color:C.tm,border:"1px solid "+C.bd,cursor:"default"}},ex);})),
+        e("p",{style:{marginTop:12,fontSize:12,color:C.bd}},"Gender looked up live from Wiktionary (en + de) \u2014 works with any German noun!"))
     )
   );
 }
@@ -193,4 +312,3 @@ ReactDOM.createRoot(document.getElementById("root")).render(e(App));
 </script>
 </body>
 </html>
-
